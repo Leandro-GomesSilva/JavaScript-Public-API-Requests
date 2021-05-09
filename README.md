@@ -1,2 +1,2 @@
 # JavaScript-Public-API-Requests
- My 5th project on the Full Stack JavaScript Techdegree: Public API Requests. In this App I worked with public APIs, made API requests and asynchronously handled the returned data.
+ My 5th project on the Full Stack JavaScript Techdegree: Public API Requests. This app uses public APIs, makes API requests and handles asynchronous data.
