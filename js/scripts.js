@@ -23,12 +23,8 @@ function fetchData(url) {
   ])
     .then( data => {
       const usersList = data[0].results;
-      
-      usersList
-        .forEach( user => {
-          appendUserHTML(user);
-          
-        });
+      usersList.forEach(user => appendUserHTML(user));
+      console.log(data);
     })
   
 // ------------------------------------------
@@ -59,10 +55,9 @@ function appendUserHTML (user) {
 }
 
 function createModalWindow (user) {
-
+  
   const modalContainer = document.createElement('div');
   modalContainer.className = "modal-container";
-  modalContainer.style.display = 'none';
 
   modalContainer.innerHTML = `
     <div class="modal">
@@ -74,7 +69,7 @@ function createModalWindow (user) {
           <p class="modal-text cap">${user.location.city}</p>
           <hr>
           <p class="modal-text">${user.phone}</p>
-          <p class="modal-text">${user.location.street}</p>
+          <p class="modal-text">${user.location.street.number} ${user.location.street.name}, ${user.location.city}, ${user.location.postcode}, ${user.location.country}</p>
           <p class="modal-text">Birthday: ${user.dob.date}</p>
       </div>
     </div>
@@ -85,15 +80,29 @@ function createModalWindow (user) {
     </div>
   `;
 
-  modalContainer.querySelector(".modal-close-btn")
-    .addEventListener('click', () => body.lastElementChild.removeChild());
-
   body.appendChild(modalContainer);
+
+  modalContainer.querySelector(".modal-close-btn")
+    .addEventListener( 'click', () => body.removeChild(modalContainer) );
+
+  extraButtonsEvents(modalContainer);
 
   return;
 }
 
 // ------------------------------------------
-//  HELPER FUNCTIONS
+//  FUNCTIONS FOR EXCEEDS
 // ------------------------------------------
 
+function extraButtonsEvents(domElement) {
+
+  domElement.querySelector('#modal-prev')
+    .addEventListener('click', () => "xxx");
+
+    domElement.querySelector('#modal-next')
+    .addEventListener('click', () => {
+      body.removeChild(modalContainer);
+      
+    });
+
+}
