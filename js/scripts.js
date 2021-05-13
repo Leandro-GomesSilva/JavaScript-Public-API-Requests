@@ -1,11 +1,14 @@
 // ------------------------------------------
-//  DOM ELEMENT SELECTION AND VARIABLES
+//  GLOBAL VARIABLES
 // ------------------------------------------
 
 const randomUserAPI = "https://randomuser.me/api/?results=";
 const numberOfUsers = "12";
+const nationalites = "&nat=ca,gb,us";
 const body = document.querySelector('body');
 const gallery = document.getElementById("gallery");
+
+const searchContainer = (e) => appendSearchContainer(e);
 
 // ------------------------------------------
 //  FETCH FUNCTION
@@ -13,25 +16,23 @@ const gallery = document.getElementById("gallery");
 
 function fetchData(url) {
     return fetch(url)
-      //.then(checkStatus)
       .then (res => res.json() )
       .catch ( error => console.log('xxxxxxxxxx', error))
   }
   
   Promise.all([  
-    fetchData(randomUserAPI + numberOfUsers)
+    fetchData(randomUserAPI + numberOfUsers + nationalites)
   ])
     .then( data => {
       const usersList = data[0].results;
-      usersList.forEach(user => appendUserHTML(user));
-      console.log(data);
+      usersList.forEach( (user, index, array) => appendUserHTML(user , index, array));
     })
   
 // ------------------------------------------
 //  DOM MANIPULATION FUNCTIONS
 // ------------------------------------------
 
-function appendUserHTML (user) {
+function appendUserHTML (user, index, array) {
   
   const card = document.createElement('div');
   card.className = "card";
@@ -47,14 +48,14 @@ function appendUserHTML (user) {
     </div>
   `;
   
-  card.addEventListener('click', () => createModalWindow(user));
+  card.addEventListener('click', () => createModalWindow(user, index, array));
 
   gallery.insertAdjacentElement('beforeend', card);
   
   return;
 }
 
-function createModalWindow (user) {
+function createModalWindow (user, index, array) {
   
   const modalContainer = document.createElement('div');
   modalContainer.className = "modal-container";
@@ -73,19 +74,25 @@ function createModalWindow (user) {
           <p class="modal-text">Birthday: ${user.dob.date}</p>
       </div>
     </div>
-
+    
     <div class="modal-btn-container">
       <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
       <button type="button" id="modal-next" class="modal-next btn">Next</button>
     </div>
   `;
 
+  if (index === 0) {
+    modalContainer.querySelector('#modal-prev').disabled = true;
+  } else if ( index === array.length - 1) {
+    modalContainer.querySelector('#modal-next').disabled = true;
+  };
+
   body.appendChild(modalContainer);
 
   modalContainer.querySelector(".modal-close-btn")
     .addEventListener( 'click', () => body.removeChild(modalContainer) );
 
-  extraButtonsEvents(modalContainer);
+  extraButtonsEvents(modalContainer, index, array);
 
   return;
 }
@@ -94,15 +101,42 @@ function createModalWindow (user) {
 //  FUNCTIONS FOR EXCEEDS
 // ------------------------------------------
 
-function extraButtonsEvents(domElement) {
+function extraButtonsEvents(domElement, index, array) {
 
   domElement.querySelector('#modal-prev')
-    .addEventListener('click', () => "xxx");
+    .addEventListener('click', () => {
+      body.removeChild(domElement);
+      const prevUser = array[index - 1];
+      createModalWindow(prevUser, index - 1, array);
+    });
 
     domElement.querySelector('#modal-next')
     .addEventListener('click', () => {
-      body.removeChild(modalContainer);
-      
+      body.removeChild(domElement);
+      const nextUser = array[index + 1];
+      createModalWindow(nextUser, index + 1, array);
     });
-
 }
+
+function appendSearchContainer (e) {
+  e.preventDefault();
+  console.log("Dasdadas");
+  const searchContainer = document.querySelector('.search-container');
+  searchContainer.innerHTML = `
+    <form action="#" method="get">
+      <input type="search" id="search-input" class="search-input" placeholder="Search...">
+      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+  `;
+  
+  const input = searchContainer.querySelector('#search-input');
+
+  const inputValue = input.value.toUpperCase();
+  const allCards = document.getElementsByClassName('card-name');
+
+  for (const card of allCards) {
+    if ( card.textContent.toUpperCase().includes(inputValue) ) {
+          console.log("Hey hey");
+    }
+  }
+};
