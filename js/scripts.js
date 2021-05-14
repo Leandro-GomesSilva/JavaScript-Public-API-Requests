@@ -8,7 +8,12 @@ const nationalites = "&nat=ca,gb,us";
 const body = document.querySelector('body');
 const gallery = document.getElementById("gallery");
 
-const searchContainer = (e) => appendSearchContainer(e);
+// ------------------------------------------
+//  CALLING FUNCTIONS
+// ------------------------------------------
+
+appendSearchContainer();
+eventListenerSearchCont();
 
 // ------------------------------------------
 //  FETCH FUNCTION
@@ -57,6 +62,9 @@ function appendUserHTML (user, index, array) {
 
 function createModalWindow (user, index, array) {
   
+  user.phone = formatPhone(user.phone);
+  user.dob.date = formatBirthday(user.dob.date);
+  
   const modalContainer = document.createElement('div');
   modalContainer.className = "modal-container";
 
@@ -92,16 +100,30 @@ function createModalWindow (user, index, array) {
   modalContainer.querySelector(".modal-close-btn")
     .addEventListener( 'click', () => body.removeChild(modalContainer) );
 
-  extraButtonsEvents(modalContainer, index, array);
+  btnCreateEventListener(modalContainer, index, array);
 
   return;
+}
+
+// ------------------------------------------
+//  HELPER FUNCTIONS
+// ------------------------------------------
+
+function formatPhone (phoneNumber) {
+  const formatedPhoneNr = phoneNumber.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+  return formatedPhoneNr;
+}
+
+function formatBirthday (birthday) {
+  const formatedBirthday = birthday.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+  return birthday;
 }
 
 // ------------------------------------------
 //  FUNCTIONS FOR EXCEEDS
 // ------------------------------------------
 
-function extraButtonsEvents(domElement, index, array) {
+function btnCreateEventListener(domElement, index, array) {
 
   domElement.querySelector('#modal-prev')
     .addEventListener('click', () => {
@@ -118,9 +140,8 @@ function extraButtonsEvents(domElement, index, array) {
     });
 }
 
-function appendSearchContainer (e) {
-  e.preventDefault();
-  console.log("Dasdadas");
+function appendSearchContainer () {
+  
   const searchContainer = document.querySelector('.search-container');
   searchContainer.innerHTML = `
     <form action="#" method="get">
@@ -128,15 +149,22 @@ function appendSearchContainer (e) {
       <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
     </form>
   `;
+}
+
+function eventListenerSearchCont () {
   
-  const input = searchContainer.querySelector('#search-input');
+  const btnSubmit = document.querySelector('#search-submit');
 
-  const inputValue = input.value.toUpperCase();
-  const allCards = document.getElementsByClassName('card-name');
-
-  for (const card of allCards) {
-    if ( card.textContent.toUpperCase().includes(inputValue) ) {
-          console.log("Hey hey");
+  btnSubmit.addEventListener ('click', (e) => {
+    e.preventDefault();
+    
+    const input = document.querySelector('#search-input');
+    const inputValue = input.value.toUpperCase();
+    const allCards = document.getElementsByClassName('card-name');
+    
+    for (const card of allCards) {
+      const doesInputMatch = card.textContent.toUpperCase().includes(inputValue);
+      doesInputMatch ? card.parentNode.parentNode.style.display = 'inherit' : card.parentNode.parentNode.style.display = 'none';
     }
-  }
-};
+  });
+}
