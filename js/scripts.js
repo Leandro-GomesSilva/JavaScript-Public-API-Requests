@@ -4,7 +4,7 @@
 
 const randomUserAPI = "https://randomuser.me/api/?results=";
 const numberOfUsers = "12";
-const nationalites = "&nat=ca,gb,us";
+const nationalites = "&nat=us";
 const body = document.querySelector('body');
 const gallery = document.getElementById("gallery");
 
@@ -110,13 +110,18 @@ function createModalWindow (user, index, array) {
 // ------------------------------------------
 
 function formatPhone (phoneNumber) {
-  const formatedPhoneNr = phoneNumber.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+  const formatedPhoneNr = phoneNumber
+    .replace(/[^\d]/g, "")
+    .replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
   return formatedPhoneNr;
 }
 
 function formatBirthday (birthday) {
-  const formatedBirthday = birthday.replace(/[^\d]/g, "").replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-  return birthday;
+  const formatedBirthday = birthday
+    .replace(/T.+/, "")
+    .replace(/[^\d]/g, "")
+    .replace(/(\d{4})(\d{2})(\d{2})/, "$3/$2/$1")
+  return formatedBirthday;
 }
 
 // ------------------------------------------
