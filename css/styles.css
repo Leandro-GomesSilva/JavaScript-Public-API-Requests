@@ -16,7 +16,7 @@ html, body {
 body {
     font-family: "Nunito", sans-serif;
     text-align: center;
-    background: rgba(235, 235, 235, 0.9);
+    background: rgba(57, 138, 208, 0.8);  /* This color has been changed */
 }
 
 header {
@@ -29,8 +29,8 @@ header {
 }
 
 header h1 {
-    font-size: 1.25em;
-    color: rgba(50, 50, 50, 0.9);
+    font-size: 1.5em;   /* This font size has been changed */
+    color: rgba(255, 255, 255, 1);   /* This color has been changed */
     margin-top: 35px;
 }
 
@@ -87,10 +87,10 @@ header h1 {
     max-width: 360px;
     margin: 10px 10px 20px;
     padding: 10px;
-    background: rgba(245, 245, 245, 0.9);
+    background: rgba(245, 245, 245, 0.7);   /* The transparency has been changed */
     border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
-    transition: .4s ease-out;
+    border: 1px solid rgba(208, 127, 57, 0.8);     /* This color has been changed */
+    transition: 0.4s;   /* The transition delay was changed  and the effect was removed */
     overflow: hidden;
 }
 
@@ -144,7 +144,17 @@ header h1 {
     border-radius: 0.25em;
     border: 1px solid rgba(100, 100, 100, 0.3);
     transition: .4s ease-out;
+    animation: expand 0.3s ease-out;     /* Animation effect for the modal window */ 
 }
+
+/* I added this keyframe to provide the desired effect to the property "animation" on .modal-container */ 
+@keyframes expand {
+    from {
+      transform: scale(0);
+      opacity: 0;
+      background: #5470B0;
+    }
+  }
 
 .modal-close-btn {
     position: absolute;
@@ -152,10 +162,11 @@ header h1 {
     right: 15px;
     cursor: pointer;
     color: rgba(255, 255, 255, 0.9);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(57, 62, 208, 0.8);     /* This color has been changed */
     outline: none;
     border-radius: 0.25em;
-    border: 1px solid rgba(50, 50, 50, 0.3);
+    border: 0px;    /* The border has been removed */
+    transition: .4s ease-out;   /* Effect added */
 }
 
 .modal-img {
@@ -188,9 +199,9 @@ header h1 {
     max-width: 420px;
     padding: 10px 15px 15px;;
     margin: 10px auto auto;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 0.25em;
-    border: 1px solid rgba(100, 100, 100, 0.3);
+    background: rgba(255, 255, 255, 0);     /* This color has been changed to make the container invisible */
+    /* border-radius: 0.25em;       This radius is not needed anymore */ 
+    border: 0px;    /* This border has been changed to make the container invisible */
 }
 
 
@@ -201,8 +212,9 @@ header h1 {
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.9);
     padding: 0.75em 1.5em;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(57, 62, 208, 1);     /* This color has been changed */
     border-radius: 0.35em;
+    border: 0px;    /* The border has been removed */
     transition: .4s ease-out;
     outline: none;
   }
@@ -237,6 +249,12 @@ header h1 {
     .modal {
         margin-top: 100px;
     }
+
+    /* Adding a display style for disabled buttons */
+    .btn:disabled {
+        background: rgb(148, 148, 148);
+        color: rgb(39, 39, 39); 
+    }
 }
 
 
@@ -249,7 +267,9 @@ header h1 {
 
     .card:hover {
         background: rgba(255, 255, 255, 1);
-        border: 1px solid rgba(50, 50, 50, 0.9);
+        border: 1.5px solid rgba(57, 62, 208, 0.9);   /* This color and the thickness have been changed */
+        transform: scale(1.05);     /* Added effect */
+        transition: 0.4s;   /* Added transition for the tranform effect */
     }
 
     .card:hover .card-text {
@@ -257,7 +277,19 @@ header h1 {
     }
 
     .btn:hover {
-        background: rgba(255, 255, 255, 1);
-        color: rgba(25, 25, 25, 1); 
+        background: rgba(138, 208, 57, 1);   /* This color has been changed */
+        color: rgba(57, 62, 208, 0.8);     /* This color has been changed */
+    }
+
+    /* Adding a display style for disabled buttons */
+    .btn:disabled {
+        background: rgb(148, 148, 148);
+        color: rgb(10, 10, 10); 
+    }
+
+    /* Adding a hover effect for close buttons */
+    .modal-close-btn:hover {
+        background: rgba(138, 208, 57, 1);
+        color: rgba(57, 62, 208, 0.8); 
     }
 }
