@@ -19,19 +19,19 @@ eventListenerSearchCont();
 //  FETCH FUNCTION
 // ------------------------------------------
 
-function fetchData(url) {
-    return fetch(url)
-      .then (res => res.json() )
-      .catch ( error => console.log('xxxxxxxxxx', error))
-  }
-  
-  Promise.all([  
-    fetchData(randomUserAPI + numberOfUsers + nationalites)
-  ])
-    .then( data => {
-      const usersList = data[0].results;
-      usersList.forEach( (user, index, array) => appendUserHTML(user , index, array));
-    })
+fetch(randomUserAPI + numberOfUsers + nationalites)
+  .then ( res => res.json() )
+  .then( data => data.results )
+  .then(usersList => {
+    
+    usersList.forEach( (user, index, array) => {
+      user.phone = formatPhone(user.phone);
+      user.dob.date = formatBirthday(user.dob.date);
+      appendUserHTML(user , index, array)
+    });
+      
+  })
+  .catch ( error => console.log('Something went terribly wrong.', error) )
   
 // ------------------------------------------
 //  DOM MANIPULATION FUNCTIONS
@@ -61,9 +61,6 @@ function appendUserHTML (user, index, array) {
 }
 
 function createModalWindow (user, index, array) {
-  
-  user.phone = formatPhone(user.phone);
-  user.dob.date = formatBirthday(user.dob.date);
   
   const modalContainer = document.createElement('div');
   modalContainer.className = "modal-container";
@@ -117,6 +114,7 @@ function formatPhone (phoneNumber) {
 }
 
 function formatBirthday (birthday) {
+  console.log(birthday);
   const formatedBirthday = birthday
     .replace(/T.+/, "")
     .replace(/[^\d]/g, "")
