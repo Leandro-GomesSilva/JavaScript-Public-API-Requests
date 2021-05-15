@@ -156,6 +156,33 @@ header h1 {
     }
   }
 
+/* Added these two CSS rules to handle the animation when the prev and next buttons are clicked */ 
+.prev-Animation {
+    animation: prevAnimation 0.3s ease-out;
+}
+
+.next-Animation {
+    animation: nextAnimation 0.3s ease-out;
+}
+
+/* Added this keyframe to handle prevAnimation */
+@keyframes prevAnimation {
+    from {
+      opacity: 0;
+      background: #5470B0;
+      transform: scale(0.5) translate(-500%);
+    }
+  }
+
+/* Added this keyframe to handle nextAnimation */
+@keyframes nextAnimation {
+    from {
+      opacity: 0;
+      background: #5470B0;
+      transform: scale(0.5) translate(500%);
+    }
+  }
+
 .modal-close-btn {
     position: absolute;
     top: 15px;

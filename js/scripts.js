@@ -6,7 +6,7 @@ const randomUserAPI = "https://randomuser.me/api/?results=";
 const numberOfUsers = "12";
 const nationalites = "&nat=us";
 const body = document.querySelector('body');
-const gallery = document.getElementById("gallery");
+const gallery = document.getElementById('gallery');
 
 // ------------------------------------------
 //  CALLING FUNCTIONS
@@ -26,12 +26,12 @@ fetch(randomUserAPI + numberOfUsers + nationalites)   // Uses the Fetch API to c
     usersList.forEach( (user, index, array) => {    // For each user in the user's list, formats its phone and birthday values and appends the creates the HTML of the user's card
       user.phone = formatPhone(user.phone);
       user.dob.date = formatBirthday(user.dob.date);
-      createsUserCard(user, index, array)
+      createsUserCard(user, index, array);
     });
       
   })
-  .catch ( error => console.log('Something went wrong.', error) )    // In case the AJAX call is not succeded 
-  
+  .catch ( error => console.log("Something went wrong.", error) )    // In case the AJAX call is not succeded 
+
 // ------------------------------------------
 //  DOM MANIPULATION FUNCTIONS
 // ------------------------------------------
@@ -63,7 +63,7 @@ function createsUserCard (user, indexUser, arrayUsers) {
     </div>
   `;
   
-  card.addEventListener('click', () => createModalWindow(user, indexUser, arrayUsers));   // Adds an event listener for the card, which calls the function createModalWindow after a click
+  card.addEventListener('click', () => createModalWindow(user, indexUser, arrayUsers, false));   // Adds an event listener for the card, which calls the function createModalWindow after a click
 
   gallery.insertAdjacentElement('beforeend', card);   // Appends the card to the DOM
   
@@ -72,15 +72,16 @@ function createsUserCard (user, indexUser, arrayUsers) {
 
 /***
  * function createModalWindow
- * This function creates the modal window div element, writes its inner HTML, adds event listeners for its three buttons and appends it to the DOM
+ * This function creates the modal window div element, writes its inner HTML, passes a class for a CSS animation rule, adds event listeners for its three buttons and appends it to the DOM
  * 
  * @param {object} user - The user's object containing properties with all user's info
  * @param {number} indexUser - The index of the current user
  * @param {array} arrayUsers - The array containing all user objects
+ * @param {string|boolean} cssAnimation - Contains a string with a class containing a CSS animation rule to be passed to "div .class" OR is the boolean false
  * @returns
  * 
  */
-function createModalWindow (user, indexUser, arrayUsers) {
+function createModalWindow (user, indexUser, arrayUsers, cssAnimation) {
   
   const modalContainer = document.createElement('div');   // Creates a div element for the modal container and gives it a class
   modalContainer.className = "modal-container";
@@ -107,6 +108,8 @@ function createModalWindow (user, indexUser, arrayUsers) {
     </div>
   `;
 
+  cssAnimation && modalContainer.querySelector('div .modal').classList.add(cssAnimation);   // Gives the class in the "cssAnimation" string to the "div .modal" or short circuits it in case cssAnimation is 'false'
+
   buttonsEventListeners(modalContainer, indexUser, arrayUsers);   // Calls the function to create all necessary Event Listeners for the buttons
   body.appendChild(modalContainer);   // Appends the div element to the DOM
 
@@ -126,9 +129,17 @@ function createModalWindow (user, indexUser, arrayUsers) {
 function buttonsEventListeners(modalContainer, indexUser, arrayUsers) {
 
   // Selects the DOM elements for the Prev and Next buttons
-  const closeButton = modalContainer.querySelector(".modal-close-btn");
+  const closeButton = modalContainer.querySelector('.modal-close-btn');
   const prevButton = modalContainer.querySelector('#modal-prev');
   const nextButton = modalContainer.querySelector('#modal-next');
+
+  // Creates another users array considering only the users current displayed on the page
+  const newArrayUsers = [];
+  const userCards = body.getElementsByClassName('card');
+
+  for ( let i = 0; i < arrayUsers.length; i ++ ) {
+    userCards[i].style.display !== "none" && newArrayUsers.push(userCards[i]); 
+  }
 
   // Definies the index of the previous and the next user in the user's array
   const prevUser = arrayUsers[indexUser - 1];
@@ -143,12 +154,12 @@ function buttonsEventListeners(modalContainer, indexUser, arrayUsers) {
   */
   prevButton.addEventListener('click', () => {
       body.removeChild(modalContainer);
-      createModalWindow(prevUser, indexUser - 1, arrayUsers);
+      createModalWindow(prevUser, indexUser - 1, arrayUsers, "prev-Animation");
     });
 
   nextButton.addEventListener('click', () => {
     body.removeChild(modalContainer);
-    createModalWindow(nextUser, indexUser + 1, arrayUsers);
+    createModalWindow(nextUser, indexUser + 1, arrayUsers, "next-Animation");
   });
 
   // Disabling the previous or the next button for the case that the list reached its end
@@ -188,12 +199,12 @@ function searchContainer () {
     
     const input = document.querySelector('#search-input');  // Gets the DOM input element
     const inputValue = input.value.toUpperCase();   // Passes the input element's value to a variable
-    const allCards = document.getElementsByClassName('card-name');  // Selects all h3 elements containing the users' names
+    const userNames = document.getElementsByClassName('card-name');  // Selects all h3 elements containing the users' names
     
     // For each all of these h3 elements, checks if its text content matches with the value from the DOM input element. If yes: displays the card. If not: hides the card
-    for (const card of allCards) {
-      const doesInputMatch = card.textContent.toUpperCase().includes(inputValue);
-      doesInputMatch ? card.parentNode.parentNode.style.display = 'inherit' : card.parentNode.parentNode.style.display = 'none';
+    for (const userName of userNames) {
+      const doesInputMatch = userName.textContent.toUpperCase().includes(inputValue);
+      doesInputMatch ? userName.parentNode.parentNode.style.display = 'inherit' : userName.parentNode.parentNode.style.display = 'none';
     }
   });
 
