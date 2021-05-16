@@ -63,7 +63,7 @@ function createsUserCard (user, indexUser, arrayUsers) {
     </div>
   `;
   
-  card.addEventListener('click', () => createModalWindow(user, indexUser, arrayUsers, false));   // Adds an event listener for the card, which calls the function createModalWindow after a click
+  card.addEventListener('click', () => createModalWindow(user, indexUser, arrayUsers, false, true));   // Adds an event listener for the card, which calls the function createModalWindow after a click
 
   gallery.insertAdjacentElement('beforeend', card);   // Appends the card to the DOM
   
@@ -78,10 +78,11 @@ function createsUserCard (user, indexUser, arrayUsers) {
  * @param {number} indexUser - The index of the current user
  * @param {array} arrayUsers - The array containing all user objects
  * @param {string|boolean} cssAnimation - Contains a string with a class containing a CSS animation rule to be passed to "div .class" OR is the boolean false
+ * @param {boolean} recalculateUserIndex - This parameter is passed to the 'buttonsEventListeners' function to determine if the current user index should be recalculated
  * @returns
  * 
  */
-function createModalWindow (user, indexUser, arrayUsers, cssAnimation) {
+function createModalWindow (user, indexUser, arrayUsers, cssAnimation, recalculateUserIndex) {
   
   const modalContainer = document.createElement('div');   // Creates a div element for the modal container and gives it a class
   modalContainer.className = "modal-container";
@@ -107,10 +108,9 @@ function createModalWindow (user, indexUser, arrayUsers, cssAnimation) {
       <button type="button" id="modal-next" class="modal-next btn">Next</button>
     </div>
   `;
-
+  
   cssAnimation && modalContainer.querySelector('div .modal').classList.add(cssAnimation);   // Gives the class in the "cssAnimation" string to the "div .modal" or short circuits it in case cssAnimation is 'false'
-
-  buttonsEventListeners(modalContainer, indexUser, arrayUsers);   // Calls the function to create all necessary Event Listeners for the buttons
+  buttonsEventListeners(modalContainer, indexUser, arrayUsers, recalculateUserIndex);   // Calls the function to create all necessary Event Listeners for the buttons
   body.appendChild(modalContainer);   // Appends the div element to the DOM
 
   return;
@@ -123,49 +123,60 @@ function createModalWindow (user, indexUser, arrayUsers, cssAnimation) {
  * @param {object} modalContainer - The div element of the modal window containing the buttons
  * @param {number} indexUser - The index of the current user
  * @param {array} arrayUsers - The array containing all user objects
+ * @param {boolean} recalculateUserIndex - This parameter avoids the current user index to be recalcualted if the modal window is changed via prev and next buttons (more info below)
  * @returns
  * 
  */
-function buttonsEventListeners(modalContainer, indexUser, arrayUsers) {
+function buttonsEventListeners(modalContainer, indexUser, arrayUsers, recalculateUserIndex) {
 
   // Selects the DOM elements for the Prev and Next buttons
   const closeButton = modalContainer.querySelector('.modal-close-btn');
   const prevButton = modalContainer.querySelector('#modal-prev');
   const nextButton = modalContainer.querySelector('#modal-next');
 
-  // Creates another users array considering only the users current displayed on the page
-  const newArrayUsers = [];
-  const userCards = body.getElementsByClassName('card');
+  // Adds the Event Listener for the close button
+  closeButton.addEventListener( 'click', () => body.removeChild(modalContainer) );
 
+  // Creates another users array considering only the users that are current being displayed on the page
+  const newArrayUsers = [];
+  let newIndexUser = indexUser;
+  const userCards = body.getElementsByClassName('card');
+  
   for ( let i = 0; i < arrayUsers.length; i ++ ) {
-    userCards[i].style.display !== "none" && newArrayUsers.push(userCards[i]); 
+
+    if ( userCards[i].style.display !== "none" ) {  // Checks if a user card is visible
+      newArrayUsers.push(arrayUsers[i]);   // Pushes the user object to the array of user objects
+
+    } else if ( recalculateUserIndex && i < indexUser ) {   // Recalculates the user index
+        newIndexUser --;  
+      }
   }
 
   // Definies the index of the previous and the next user in the user's array
-  const prevUser = arrayUsers[indexUser - 1];
-  const nextUser = arrayUsers[indexUser + 1];
-  
-  // Adds the Event Listener for the close button
-  closeButton.addEventListener( 'click', () => body.removeChild(modalContainer) );
+  const prevUser = newArrayUsers[newIndexUser - 1];
+  const nextUser = newArrayUsers[newIndexUser + 1];
  
   /* Adds the Event listeners for the prev and next buttons: 
       1- Removes the current Modal Window from the DOM. 
       2- Calls the createModalWindow function passing the corresponding user's variables.
+      3- It passes "false" as argument for the parameter recalculateUserIndex to ensure the app knows the position of the toggled modal window relative to the visibility of the users in the screen.
+          If the app recalculates the index or uses the original indexes, it will display wrong users when toggling left and right
   */
   prevButton.addEventListener('click', () => {
       body.removeChild(modalContainer);
-      createModalWindow(prevUser, indexUser - 1, arrayUsers, "prev-Animation");
+      createModalWindow(prevUser, newIndexUser - 1, arrayUsers, "prev-Animation", false);
     });
 
   nextButton.addEventListener('click', () => {
     body.removeChild(modalContainer);
-    createModalWindow(nextUser, indexUser + 1, arrayUsers, "next-Animation");
+    createModalWindow(nextUser, newIndexUser + 1, arrayUsers, "next-Animation", false);
   });
 
-  // Disabling the previous or the next button for the case that the list reached its end
-  if (indexUser === 0) {
+  // Disabling the previous and/or the next button for the case that the list reached its end
+  if (newIndexUser === 0) {
     prevButton.disabled = true;
-  } else if ( indexUser === arrayUsers.length - 1) {
+  } 
+  if ( newIndexUser === newArrayUsers.length - 1) {
     nextButton.disabled = true;
   };
 

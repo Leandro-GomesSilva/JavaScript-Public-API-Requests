@@ -90,7 +90,7 @@ header h1 {
     background: rgba(245, 245, 245, 0.7);   /* The transparency has been changed */
     border-radius: 0.25em;
     border: 1px solid rgba(208, 127, 57, 0.8);     /* This color has been changed */
-    transition: 0.4s;   /* The transition delay was changed  and the effect was removed */
+    transition: 0.4s;   /* The transition delay was changed and the effect was removed */
     overflow: hidden;
 }
 
