@@ -256,7 +256,7 @@ function formatBirthday (birthday) {
   const formatedBirthday = birthday   // Passes the current value of the birthday to a variable and manipulates it with REGEX
     .replace(/T.+/, "")
     .replace(/[^\d]/g, "")
-    .replace(/(\d{4})(\d{2})(\d{2})/, "$3/$2/$1")
+    .replace(/(\d{4})(\d{2})(\d{2})/, "$2/$3/$1")
   
   return formatedBirthday;  // Returns the formated birthday
 }
