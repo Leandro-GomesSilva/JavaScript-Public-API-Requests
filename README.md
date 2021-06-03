@@ -1,4 +1,4 @@
-# JavaScript - Public API Requests
+# JavaScript: Public API Requests
  The 5th project on the Full Stack JavaScript Techdegree. This application makes AJAX requests to a public API and handles asynchronous data. The application grabs information about 12 fictional employees as a JSON object from the API and builds an employee directory with it. The application displays the employees in a grid as well as in a detailed modal window with toggle buttons and is also equipped with a search functionality.
 
  Main technologies: JavaScript<br>
