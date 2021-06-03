@@ -1,10 +1,10 @@
 # JavaScript - Public API Requests
  The 5th project on the Full Stack JavaScript Techdegree. This application makes AJAX requests to a public API and handles asynchronous data. The application grabs information about 12 fictional employees as a JSON object from the API and builds an employee directory with it. The application displays the employees in a grid as well as in a detailed modal window with toogle buttons and is also equiped with a search functionality.
 
- Main technologies: JavaScript
- Auxiliary technologies: HTML, CSS
- Complexity level: Intermediate
- Concepts: AJAX, Fetch API, Public APIs, JSON, Regex, DOM manipulation, Event listeners, CSS animations, HTML elements
+ Main technologies: JavaScript<br>
+ Auxiliary technologies: HTML, CSS<br>
+ Complexity level: Intermediate<br>
+ Concepts: AJAX, Fetch API, Public APIs, JSON, Regex, DOM manipulation, Event listeners, CSS animations, HTML elements<br>
 
 For Exceeding Expectations:
 
