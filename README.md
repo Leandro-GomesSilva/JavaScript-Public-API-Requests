@@ -21,7 +21,6 @@
     - Hover effect for buttons: background color and text color
     - Transition effect for the modal window close button
     - Style for disabled buttons
-    - 
 
 ## Extras:
   - CSS hover effect for the user card
